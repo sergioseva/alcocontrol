@@ -415,9 +415,11 @@ footer{background:var(--gris);border-top:2px solid var(--gris2);padding:3rem 2re
     <!-- Login form -->
     <div class="admin-login" id="admin-login">
       <h2>Panel de moderación</h2>
-      <p>Ingresá la contraseña para acceder a los testimonios pendientes.</p>
+      <p>Ingresá tus credenciales para acceder a los testimonios pendientes.</p>
       <div style="text-align:left">
-        <label for="admin-pass">Contraseña</label>
+        <label for="admin-email">Email</label>
+        <input type="email" id="admin-email" placeholder="moderator@caca.com">
+        <label for="admin-pass" style="margin-top:.75rem">Contraseña</label>
         <input type="password" id="admin-pass" placeholder="••••••••••" onkeyup="if(event.key==='Enter')loginAdmin()">
       </div>
       <button class="btn-login" onclick="loginAdmin()">Ingresar</button>
@@ -446,9 +448,15 @@ footer{background:var(--gris);border-top:2px solid var(--gris2);padding:3rem 2re
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+/* ===== SUPABASE ===== */
+const SUPABASE_URL = 'https://hoywcohyhhpfyiwfvrul.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_FV05bvWAPBudvE4hoPf7vA_GBafqkQf';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 /* ===== DATOS: horario ===== */
-const accidentalidad = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,2,2]; // 0=bajo 1=medio 2=alto
+const accidentalidad = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,2,2];
 const controlFrecuente= [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0];
 const grid = document.getElementById('horario-grid');
 for(let h=0;h<24;h++){
@@ -463,24 +471,32 @@ for(let h=0;h<24;h++){
   grid.appendChild(b);
 }
 
-/* ===== STORAGE DE COMENTARIOS ===== */
-const STORAGE_KEY = 'alcocontrol_comentarios';
-
-function getComentarios(){
-  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch(e){ return []; }
+/* ===== UTILIDADES ===== */
+function esc(str){
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function saveComentarios(arr){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+function formatFecha(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
 }
 
 /* ===== COMENTARIOS PÚBLICOS ===== */
-function renderComentariosPublicos(){
-  const todos = getComentarios();
-  const aprobados = todos.filter(c=>c.estado==='aprobado').sort((a,b)=>b.id-a.id);
+async function renderComentariosPublicos(){
   const lista = document.getElementById('comentarios-lista');
   const conteo = document.getElementById('conteo-comentarios');
-  conteo.textContent = aprobados.length === 0 ? 'Sé el primero en dejar tu testimonio.' : `${aprobados.length} testimonio${aprobados.length!==1?'s':''} publicado${aprobados.length!==1?'s':''}`;
+  const {data: aprobados, error} = await sb
+    .from('testimonios')
+    .select('*')
+    .eq('estado','aprobado')
+    .order('created_at',{ascending:false});
+  if(error){
+    lista.innerHTML = '<div class="sin-comentarios">Error al cargar testimonios.</div>';
+    conteo.textContent = '';
+    return;
+  }
+  conteo.textContent = aprobados.length === 0
+    ? 'Sé el primero en dejar tu testimonio.'
+    : `${aprobados.length} testimonio${aprobados.length!==1?'s':''} publicado${aprobados.length!==1?'s':''}`;
   if(aprobados.length===0){
     lista.innerHTML = '<div class="sin-comentarios">Todavía no hay testimonios aprobados. ¡El tuyo puede ser el primero!</div>';
     return;
@@ -493,43 +509,39 @@ function renderComentariosPublicos(){
           <span class="comentario-ciudad"> — ${esc(c.ciudad)}</span>
           <span class="comentario-ciudad" style="color:var(--texto-muted);margin-left:.5rem">(${esc(c.tipo)})</span>
         </div>
-        <span class="comentario-fecha">${c.fecha}</span>
+        <span class="comentario-fecha">${formatFecha(c.created_at)}</span>
       </div>
       <p class="comentario-texto">${esc(c.texto).replace(/\n/g,'<br>')}</p>
     </div>
   `).join('');
 }
 
-function esc(str){
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function enviarComentario(){
+async function enviarComentario(){
   const nombre = document.getElementById('nombre').value.trim();
   const ciudad = document.getElementById('ciudad').value.trim();
   const tipo = document.getElementById('tipo').value;
   const texto = document.getElementById('testimonio').value.trim();
   if(!nombre||!ciudad||!texto){alert('Por favor completá nombre, ciudad y testimonio.');return;}
   if(texto.length<30){alert('El testimonio es muy corto. Contanos un poco más.');return;}
-  const comentarios = getComentarios();
-  comentarios.push({
-    id: Date.now(),
-    nombre, ciudad, tipo, texto,
-    estado: 'pendiente',
-    fecha: new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'})
-  });
-  saveComentarios(comentarios);
+  const btn = document.querySelector('.btn-enviar');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  const {error} = await sb.from('testimonios').insert({nombre, ciudad, tipo, texto, estado:'pendiente'});
+  btn.disabled = false;
+  btn.textContent = 'Enviar testimonio →';
+  if(error){
+    alert('Error al enviar. Intentá de nuevo.');
+    return;
+  }
   document.getElementById('nombre').value='';
   document.getElementById('ciudad').value='';
   document.getElementById('testimonio').value='';
   const ok = document.getElementById('mensaje-ok');
   ok.style.display='block';
   setTimeout(()=>ok.style.display='none',5000);
-  renderComentariosPublicos();
 }
 
 /* ===== ADMIN ===== */
-const ADMIN_PASS = 'control123';
 let adminLogueado = false;
 
 function abrirAdmin(){
@@ -542,16 +554,19 @@ function abrirAdmin(){
 function cerrarAdmin(){
   document.getElementById('admin-overlay').classList.remove('activo');
 }
-function loginAdmin(){
+async function loginAdmin(){
+  const email = document.getElementById('admin-email').value.trim();
   const pass = document.getElementById('admin-pass').value;
-  if(pass===ADMIN_PASS){
-    adminLogueado=true;
-    document.getElementById('admin-login').style.display='none';
-    document.getElementById('admin-content').style.display='block';
-    renderAdmin();
-  } else {
+  if(!email||!pass){document.getElementById('login-error').style.display='block';return;}
+  const {error} = await sb.auth.signInWithPassword({email, password:pass});
+  if(error){
     document.getElementById('login-error').style.display='block';
+    return;
   }
+  adminLogueado = true;
+  document.getElementById('admin-login').style.display='none';
+  document.getElementById('admin-content').style.display='block';
+  renderAdmin();
 }
 function mostrarTab(id, btn){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('activo'));
@@ -559,17 +574,21 @@ function mostrarTab(id, btn){
   document.getElementById('tab-'+id).classList.add('activo');
   btn.classList.add('activo');
 }
-function renderAdmin(){
-  const todos = getComentarios();
+async function renderAdmin(){
+  const {data: todos, error} = await sb
+    .from('testimonios')
+    .select('*')
+    .order('created_at',{ascending:false});
+  if(error||!todos){return;}
   const pendientes = todos.filter(c=>c.estado==='pendiente');
   const aprobados = todos.filter(c=>c.estado==='aprobado');
   document.getElementById('badge-pendientes').textContent = `(${pendientes.length})`;
   document.getElementById('badge-aprobados').textContent = `(${aprobados.length})`;
   const renderLista = (arr, tipo) => {
     if(arr.length===0) return '<div class="admin-vacio">No hay comentarios en esta categoría.</div>';
-    return arr.sort((a,b)=>b.id-a.id).map(c=>`
+    return arr.map(c=>`
       <div class="admin-comentario" id="ac-${c.id}">
-        <div class="admin-meta">${esc(c.nombre)} — ${esc(c.ciudad)} — ${esc(c.tipo)} — ${c.fecha}</div>
+        <div class="admin-meta">${esc(c.nombre)} — ${esc(c.ciudad)} — ${esc(c.tipo)} — ${formatFecha(c.created_at)}</div>
         <div class="admin-texto">${esc(c.texto).replace(/\n/g,'<br>')}</div>
         <div class="admin-acciones">
           ${tipo==='pendiente'?`<button class="btn-aprobar" onclick="accion(${c.id},'aprobado')">✓ Aprobar</button>`:''}
@@ -582,34 +601,17 @@ function renderAdmin(){
   document.getElementById('lista-pendientes').innerHTML = renderLista(pendientes,'pendiente');
   document.getElementById('lista-aprobados').innerHTML = renderLista(aprobados,'aprobado');
 }
-function accion(id, nuevoEstado){
-  const comentarios = getComentarios();
-  const idx = comentarios.findIndex(c=>c.id===id);
-  if(idx>=0){
-    comentarios[idx].estado = nuevoEstado;
-    saveComentarios(comentarios);
-    renderAdmin();
-    renderComentariosPublicos();
-  }
+async function accion(id, nuevoEstado){
+  await sb.from('testimonios').update({estado:nuevoEstado}).eq('id',id);
+  renderAdmin();
+  renderComentariosPublicos();
 }
 
 /* INIT */
 document.addEventListener('DOMContentLoaded', ()=>{
   renderComentariosPublicos();
-
-  // Cargar algunos testimonios de ejemplo si no hay ninguno
-  if(getComentarios().length === 0){
-    const ejemplos = [
-      {id:1700000001,nombre:'Rodrigo M.',ciudad:'Gualeguaychú',tipo:'conductor',texto:'Estuve 45 minutos en la fila en el puente el sábado pasado. Era noche de temporada, lleno de turistas. Todos sobrios. El control siguió hasta la medianoche pero los chicos que iban al boliche después de la 1 entraron sin problema.',estado:'aprobado',fecha:'15/03/2025'},
-      {id:1700000002,nombre:'Marcela, bar El Almacén',ciudad:'Gualeguaychú',tipo:'negocio',texto:'Nos avisaron que había control en la entrada de la ciudad ese fin de semana largo. Teníamos el salón completo reservado. Cancelaron el 60% de las mesas. No hay forma de recuperar eso. Y encima, cuántos positivos hicieron? Nadie te dice.',estado:'aprobado',fecha:'02/02/2025'},
-      {id:1700000003,nombre:'Turista cordobés',ciudad:'Córdoba (visitando)',tipo:'turista',texto:'Primera vez en la ciudad, fuimos con mi familia. En la salida el domingo a la noche, dos horas de cola. Los chicos dormidos en el auto. Cuando llegué al control, "todo bien, siga". Listo. La próxima vamos a San Martín de los Andes.',estado:'aprobado',fecha:'22/01/2025'},
-    ];
-    saveComentarios(ejemplos);
-    renderComentariosPublicos();
-  }
 });
 
-// Cerrar al click fuera del panel
 document.getElementById('admin-overlay').addEventListener('click', function(e){
   if(e.target===this) cerrarAdmin();
 });
