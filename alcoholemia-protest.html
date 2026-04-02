@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cuántos atraparon anoche? | La verdad sobre los controles de alcoholemia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --rojo:#e63946;
+  --amarillo:#f4d03f;
+  --crema:#f1ece3;
+  --oscuro:#0d0d0d;
+  --gris:#1a1a1a;
+  --gris2:#2a2a2a;
+  --texto-muted:#9a9080;
+}
+html{scroll-behavior:smooth}
+body{background:var(--oscuro);color:var(--crema);font-family:'Lora',serif;line-height:1.7;overflow-x:hidden}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:var(--oscuro);border-bottom:2px solid var(--rojo);padding:0 2rem}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{font-family:'Anton',sans-serif;font-size:1.3rem;color:var(--rojo);letter-spacing:2px;text-decoration:none}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--texto-muted);text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;letter-spacing:1px;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--crema)}
+
+/* HERO */
+.hero{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;position:relative;overflow:hidden;border-bottom:4px solid var(--rojo)}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(230,57,70,.04) 40px,rgba(230,57,70,.04) 41px)}
+.hero-etiqueta{font-family:'Barlow Condensed',sans-serif;letter-spacing:4px;font-size:.85rem;color:var(--rojo);text-transform:uppercase;margin-bottom:1rem;border:1px solid var(--rojo);display:inline-block;padding:.25rem 1rem}
+.hero h1{font-family:'Anton',sans-serif;font-size:clamp(3.5rem,11vw,9rem);line-height:1;color:var(--crema);max-width:900px}
+.hero h1 span{color:var(--rojo)}
+.hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--texto-muted);max-width:600px;margin:1.5rem auto;font-style:italic}
+.hero-stat{font-family:'Anton',sans-serif;font-size:clamp(1rem,3vw,1.3rem);color:var(--amarillo);letter-spacing:1px;margin-top:2rem}
+.hero-disclaimer{font-size:.8rem;color:var(--texto-muted);margin-top:.5rem;font-style:italic}
+.btn-cta{display:inline-block;margin-top:2.5rem;padding:.85rem 2.5rem;background:var(--rojo);color:white;font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:background .2s}
+.btn-cta:hover{background:#c0303b}
+.numero-grande{font-family:'Anton',sans-serif;font-size:clamp(6rem,20vw,16rem);color:rgba(230,57,70,.08);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;white-space:nowrap;z-index:0}
+.hero > *:not(.numero-grande){position:relative;z-index:1}
+
+/* SECCIONES */
+section{padding:5rem 2rem}
+.container{max-width:1100px;margin:0 auto}
+.seccion-label{font-family:'Barlow Condensed',sans-serif;letter-spacing:4px;font-size:.8rem;color:var(--rojo);text-transform:uppercase;margin-bottom:.75rem}
+.seccion-titulo{font-family:'Anton',sans-serif;font-size:clamp(2rem,5vw,3.5rem);line-height:1.1;margin-bottom:1.5rem}
+.seccion-titulo span{color:var(--rojo)}
+.seccion-intro{font-size:1.05rem;color:var(--texto-muted);max-width:700px;margin-bottom:3rem;font-style:italic}
+
+/* SEPARADOR */
+.sep{height:2px;background:var(--gris2);max-width:1100px;margin:0 auto}
+
+/* DATOS */
+#datos{background:var(--oscuro)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-bottom:3.5rem}
+.stat-card{background:var(--gris);border:1px solid var(--gris2);padding:2rem;position:relative;overflow:hidden}
+.stat-card::after{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--rojo)}
+.stat-num{font-family:'Anton',sans-serif;font-size:3rem;color:var(--rojo);line-height:1}
+.stat-unidad{font-family:'Barlow Condensed',sans-serif;font-size:1rem;color:var(--amarillo);letter-spacing:1px;margin:.25rem 0}
+.stat-desc{font-size:.9rem;color:var(--texto-muted);margin-top:.5rem}
+.stat-fuente{font-size:.75rem;color:#555;margin-top:.75rem;font-style:italic;border-top:1px solid var(--gris2);padding-top:.5rem}
+.datos-cols{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+@media(max-width:700px){.datos-cols{grid-template-columns:1fr}}
+.comparativa{background:var(--gris);border:1px solid var(--gris2);padding:2rem}
+.comparativa h3{font-family:'Anton',sans-serif;font-size:1.3rem;margin-bottom:1.5rem;color:var(--crema)}
+.comp-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+.comp-label{font-family:'Barlow Condensed',sans-serif;font-size:.85rem;color:var(--texto-muted);text-transform:uppercase;letter-spacing:1px;min-width:120px}
+.comp-bar-wrap{flex:1;background:var(--gris2);height:28px;position:relative}
+.comp-bar{height:100%;display:flex;align-items:center;padding-left:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;transition:width 1s}
+.comp-bar.rojo{background:var(--rojo);color:white}
+.comp-bar.verde{background:#2a9d8f;color:white}
+.texto-datos p{margin-bottom:1rem;font-size:.95rem}
+.texto-datos blockquote{border-left:3px solid var(--rojo);padding-left:1.5rem;margin:1.5rem 0;font-style:italic;color:var(--texto-muted)}
+.datos-horario{margin-top:2rem}
+.horario-grid{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;margin-top:.75rem}
+.hora-bloque{height:32px;background:var(--gris2);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;color:#555;position:relative;cursor:default}
+.hora-bloque.accidente{background:rgba(230,57,70,.7)}
+.hora-bloque.control{background:rgba(244,208,63,.5)}
+.hora-bloque.ambos{background:linear-gradient(135deg,rgba(230,57,70,.7) 50%,rgba(244,208,63,.5) 50%)}
+.leyenda-horario{display:flex;gap:1.5rem;margin-top:.75rem;flex-wrap:wrap}
+.leyenda-item{display:flex;align-items:center;gap:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.8rem;color:var(--texto-muted)}
+.leyenda-color{width:14px;height:14px}
+
+/* ECONOMÍA */
+#economia{background:var(--gris)}
+.eco-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-bottom:3rem}
+.eco-card{background:var(--oscuro);padding:2rem;border-top:3px solid var(--rojo)}
+.eco-icono{font-size:2rem;margin-bottom:1rem}
+.eco-card h3{font-family:'Anton',sans-serif;font-size:1.4rem;margin-bottom:.75rem}
+.eco-card p{font-size:.9rem;color:var(--texto-muted)}
+.eco-card strong{color:var(--crema)}
+.impacto-visual{background:var(--oscuro);padding:2.5rem;border:1px solid var(--gris2);margin-top:2rem}
+.impacto-visual h3{font-family:'Anton',sans-serif;font-size:1.5rem;margin-bottom:2rem}
+.noche-simulador{display:flex;gap:2rem;align-items:flex-end;flex-wrap:wrap}
+.noche-col{flex:1;min-width:180px}
+.noche-col h4{font-family:'Barlow Condensed',sans-serif;font-size:.85rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:.75rem;color:var(--texto-muted)}
+.barra-noche{background:var(--gris2);position:relative;width:100%}
+.barra-fill{width:100%;background:var(--rojo);display:flex;align-items:flex-end;justify-content:center;padding-bottom:.5rem;font-family:'Anton',sans-serif;font-size:1.5rem;color:white;transition:height 1s}
+.barra-fill.verde{background:#2a9d8f}
+.noche-label{font-family:'Barlow Condensed',sans-serif;font-size:.8rem;color:var(--texto-muted);margin-top:.5rem;text-align:center}
+.turismo-lista{list-style:none;margin-top:1.5rem}
+.turismo-lista li{padding:.75rem 0;border-bottom:1px solid var(--gris2);font-size:.9rem;display:flex;gap:1rem;align-items:flex-start}
+.turismo-lista li::before{content:'→';color:var(--rojo);flex-shrink:0;font-family:'Barlow Condensed',sans-serif}
+
+/* EXPERIENCIAS */
+#experiencias{background:var(--oscuro)}
+.form-testimonio{background:var(--gris);padding:2.5rem;margin-bottom:3rem;border:1px solid var(--gris2)}
+.form-testimonio h3{font-family:'Anton',sans-serif;font-size:1.5rem;margin-bottom:.5rem}
+.form-testimonio p{font-size:.85rem;color:var(--texto-muted);margin-bottom:2rem;font-style:italic}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:600px){.form-row{grid-template-columns:1fr}}
+label{display:block;font-family:'Barlow Condensed',sans-serif;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;color:var(--texto-muted);margin-bottom:.35rem}
+input,textarea,select{width:100%;background:var(--gris2);border:1px solid #333;color:var(--crema);padding:.75rem 1rem;font-family:'Lora',serif;font-size:.9rem;outline:none;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--rojo)}
+textarea{resize:vertical;min-height:120px}
+.btn-enviar{margin-top:1.5rem;padding:.85rem 2.5rem;background:var(--rojo);color:white;font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;letter-spacing:2px;text-transform:uppercase;border:none;cursor:pointer;transition:background .2s}
+.btn-enviar:hover{background:#c0303b}
+.mensaje-ok{display:none;background:rgba(42,157,143,.15);border:1px solid #2a9d8f;padding:1rem 1.5rem;color:#2a9d8f;font-family:'Barlow Condensed',sans-serif;font-size:1rem;letter-spacing:1px;margin-top:1rem}
+.comentarios-lista{display:flex;flex-direction:column;gap:1.5rem}
+.comentario{background:var(--gris);padding:2rem;border-left:3px solid var(--rojo);position:relative}
+.comentario-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+.comentario-autor{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.1rem;color:var(--crema)}
+.comentario-ciudad{font-family:'Barlow Condensed',sans-serif;font-size:.85rem;color:var(--rojo);letter-spacing:1px;text-transform:uppercase}
+.comentario-fecha{font-size:.75rem;color:#555;font-style:italic}
+.comentario-texto{font-size:.95rem;line-height:1.7;color:#ccc}
+.sin-comentarios{color:var(--texto-muted);font-style:italic;padding:2rem;border:1px dashed var(--gris2);text-align:center}
+.conteo-comentarios{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;color:var(--texto-muted);margin-bottom:1.5rem;letter-spacing:1px}
+
+/* FOOTER */
+footer{background:var(--gris);border-top:2px solid var(--gris2);padding:3rem 2rem}
+.footer-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+@media(max-width:600px){.footer-inner{grid-template-columns:1fr}}
+.footer-logo{font-family:'Anton',sans-serif;font-size:1.5rem;color:var(--rojo);margin-bottom:.5rem}
+.footer-desc{font-size:.85rem;color:var(--texto-muted)}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:.5rem}
+.footer-links a{color:var(--texto-muted);text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:.9rem;letter-spacing:1px;transition:color .2s}
+.footer-links a:hover{color:var(--rojo)}
+.footer-legal{max-width:1100px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid var(--gris2);font-size:.75rem;color:#444;font-style:italic}
+.admin-link{color:#333;font-size:.7rem;text-decoration:none;margin-left:1rem;transition:color .3s}
+.admin-link:hover{color:var(--texto-muted)}
+
+/* ADMIN PANEL */
+.admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:999;overflow-y:auto;padding:2rem}
+.admin-overlay.activo{display:block}
+.admin-panel{max-width:900px;margin:0 auto}
+.admin-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--rojo);padding-bottom:1rem;margin-bottom:2rem}
+.admin-header h2{font-family:'Anton',sans-serif;font-size:1.8rem;color:var(--rojo)}
+.btn-cerrar{background:none;border:1px solid #444;color:var(--texto-muted);padding:.5rem 1rem;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:.9rem;letter-spacing:1px}
+.admin-tabs{display:flex;gap:1rem;margin-bottom:2rem;border-bottom:1px solid var(--gris2);padding-bottom:1rem}
+.tab-btn{background:none;border:none;color:var(--texto-muted);font-family:'Barlow Condensed',sans-serif;font-size:1rem;letter-spacing:1px;cursor:pointer;padding:.5rem 1rem;transition:all .2s}
+.tab-btn.activo{color:var(--amarillo);border-bottom:2px solid var(--amarillo)}
+.tab-content{display:none}
+.tab-content.activo{display:block}
+.admin-comentario{background:var(--gris);padding:1.5rem;border:1px solid var(--gris2);margin-bottom:1rem}
+.admin-meta{font-family:'Barlow Condensed',sans-serif;font-size:.85rem;color:var(--texto-muted);margin-bottom:.5rem}
+.admin-texto{font-size:.9rem;margin-bottom:1rem;color:var(--crema)}
+.admin-acciones{display:flex;gap:.75rem}
+.btn-aprobar{padding:.4rem 1.2rem;background:#2a9d8f;border:none;color:white;font-family:'Barlow Condensed',sans-serif;font-size:.9rem;letter-spacing:1px;cursor:pointer;transition:background .2s}
+.btn-aprobar:hover{background:#21867a}
+.btn-rechazar,.btn-eliminar{padding:.4rem 1.2rem;background:none;border:1px solid var(--rojo);color:var(--rojo);font-family:'Barlow Condensed',sans-serif;font-size:.9rem;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.btn-rechazar:hover,.btn-eliminar:hover{background:var(--rojo);color:white}
+.admin-login{background:var(--gris);padding:3rem;max-width:400px;margin:5rem auto;text-align:center;border:1px solid var(--gris2)}
+.admin-login h2{font-family:'Anton',sans-serif;font-size:1.5rem;color:var(--rojo);margin-bottom:1rem}
+.admin-login p{color:var(--texto-muted);font-size:.9rem;margin-bottom:2rem;font-style:italic}
+.btn-login{margin-top:1rem;padding:.75rem 2rem;background:var(--rojo);border:none;color:white;font-family:'Barlow Condensed',sans-serif;font-size:1rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;width:100%}
+.admin-vacio{color:var(--texto-muted);font-style:italic;padding:2rem;text-align:center;border:1px dashed var(--gris2)}
+.tooltip{position:relative;display:inline-block;cursor:help}
+.tooltip:hover::after{content:attr(data-tip);position:absolute;bottom:125%;left:50%;transform:translateX(-50%);background:var(--oscuro);border:1px solid var(--gris2);color:var(--crema);font-size:.8rem;font-family:'Barlow Condensed',sans-serif;padding:.5rem .75rem;width:250px;z-index:10;line-height:1.4}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .noche-simulador{flex-direction:column}
+  .horario-grid{grid-template-columns:repeat(12,1fr)}
+  .hora-bloque{font-size:.55rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">AlcoControl.ar</a>
+    <ul class="nav-links">
+      <li><a href="#datos">Los datos</a></li>
+      <li><a href="#economia">El costo</a></li>
+      <li><a href="#experiencias">Tu experiencia</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="numero-grande">0</div>
+  <span class="hero-etiqueta">Investigación ciudadana</span>
+  <h1>¿A cuántos <span>borrachos</span> atraparon anoche?</h1>
+  <p class="hero-sub">Spoiler: probablemente menos de los que arruinaron la noche.</p>
+  <p class="hero-stat">Por cada conductor ebrio detenido en un control fijo, se molestó a cientos de conductores sobrios.</p>
+  <p class="hero-disclaimer">Este sitio no apoya manejar alcoholizado. Apoya usar el sentido común.</p>
+  <a href="#datos" class="btn-cta">Ver los números</a>
+</section>
+
+<div class="sep"></div>
+
+<!-- SECCIÓN 1: DATOS -->
+<section id="datos">
+  <div class="container">
+    <p class="seccion-label">Sección 01 — Evidencia</p>
+    <h2 class="seccion-titulo">Los números que los<br><span>municipios no publican</span></h2>
+    <p class="seccion-intro">Datos de organismos de seguridad vial de Argentina, EE.UU. y la Unión Europea sobre la efectividad real de los controles de alcoholemia.</p>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num">1</div>
+        <div class="stat-unidad">de cada 100–300</div>
+        <div class="stat-desc">vehículos detenidos en controles fijos resulta en detención por alcoholemia positiva.</div>
+        <div class="stat-fuente">NHTSA (EE.UU.) / ANSV Argentina — datos de operativos tipo checkpoint</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">4–20×</div>
+        <div class="stat-unidad">más efectivas</div>
+        <div class="stat-desc">son las patrullas móviles (saturation patrols) para detectar conductores alcoholizados por hora de trabajo policial.</div>
+        <div class="stat-fuente">CDC United States — "Sobriety Checkpoints vs. Roving Patrols", 2022</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">18 hs</div>
+        <div class="stat-unidad">horario típico de control</div>
+        <div class="stat-desc">Los controles suelen comenzar a las 18–23 hs. Los accidentes con alcohol se concentran entre las 00–5 hs del fin de semana.</div>
+        <div class="stat-fuente">LUCHEMOS POR LA VIDA — Anuario de Siniestralidad Vial Argentina</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3%</div>
+        <div class="stat-unidad">de los accidentes graves</div>
+        <div class="stat-desc">son protagonizados por conductores con alcoholemia positiva en rutas nacionales argentinas. El factor principal es el exceso de velocidad (47%).</div>
+        <div class="stat-fuente">ANSV — Siniestros viales con víctimas, 2019–2023</div>
+      </div>
+    </div>
+
+    <div class="datos-cols">
+      <div class="comparativa">
+        <h3>Control fijo vs. patrulla móvil</h3>
+        <div class="comp-row">
+          <span class="comp-label">Control fijo</span>
+          <div class="comp-bar-wrap">
+            <div class="comp-bar rojo" style="width:20%">20%</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">Patrulla móvil</span>
+          <div class="comp-bar-wrap">
+            <div class="comp-bar verde" style="width:100%">100%</div>
+          </div>
+        </div>
+        <p style="font-size:.75rem;color:var(--texto-muted);margin-top:1rem;font-style:italic">Eficiencia relativa en detención de conductores alcoholizados por hora de agente policial (CDC, 2022)</p>
+
+        <div class="datos-horario" style="margin-top:2rem">
+          <p style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--texto-muted);margin-bottom:.5rem">Horario de accidentes vs. controles (típico Argentina)</p>
+          <div class="horario-grid" id="horario-grid"></div>
+          <div class="leyenda-horario">
+            <div class="leyenda-item"><div class="leyenda-color" style="background:rgba(230,57,70,.7)"></div>Alta accidentalidad</div>
+            <div class="leyenda-item"><div class="leyenda-color" style="background:rgba(244,208,63,.5)"></div>Control frecuente</div>
+            <div class="leyenda-item"><div class="leyenda-color" style="background:var(--gris2)"></div>Sin datos relevantes</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="texto-datos">
+        <p>Los controles de alcoholemia fijos son, según la evidencia acumulada, <strong style="color:var(--crema)">la forma menos eficiente de reducir la siniestralidad vial</strong> relacionada con el alcohol. No porque no sirvan, sino porque la alternativa —las patrullas que circulan activamente— los supera ampliamente.</p>
+        <blockquote>"El problema no es detectar al borracho que ya salió. Es que no salga borracho. Y para eso, los controles en puntos fijos tienen un efecto disuasorio mucho menor que las patrullas visibles en movimiento."<br><small>— Adaptado de estudios de seguridad vial, CDC 2022</small></blockquote>
+        <p>El efecto disuasorio de un control fijo es limitado: los conductores aprenden rápidamente <strong style="color:var(--crema)">dónde está el control</strong> (gracias a Waze, grupos de WhatsApp y simple memoria) y ajustan su ruta. Un patrullero móvil no puede ser esquivado.</p>
+        <p>En Argentina, los días con mayor mortalidad vial por alcohol son el <strong style="color:var(--crema)">sábado y domingo a la madrugada</strong>. Si los controles se colocan el viernes a las 21 hs frente a un bar conocido, la ecuación está incompleta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- SECCIÓN 2: ECONOMÍA -->
+<section id="economia">
+  <div class="container">
+    <p class="seccion-label">Sección 02 — Impacto económico</p>
+    <h2 class="seccion-titulo">Lo que un control mata<br><span>además del ambiente</span></h2>
+    <p class="seccion-intro">Nadie hace la cuenta de cuánto pierde la economía local cuando hay un control de alcoholemia en la puerta de la calle principal un sábado a las 22 hs.</p>
+
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-icono">🍺</div>
+        <h3>Bares y restaurantes</h3>
+        <p>Establecimientos de gastronomía reportan caídas de <strong>25 a 50%</strong> en sus ventas en noches donde el operativo es visible o está anunciado. Los clientes simplemente eligen no salir, o se van antes.</p>
+      </div>
+      <div class="eco-card">
+        <div class="eco-icono">🧳</div>
+        <h3>Turismo</h3>
+        <p>Los visitantes de fin de semana que vienen a disfrutar la ciudad no repiten si la experiencia incluye <strong>40 minutos de cola</strong> para que un agente les sople un tubo. La reputación de una ciudad como "hostigante" se construye rápido.</p>
+      </div>
+      <div class="eco-card">
+        <div class="eco-icono">🎶</div>
+        <h3>Cultura y entretenimiento</h3>
+        <p>Shows, festivales, recitales y eventos culturales ven reducida su convocatoria cuando el acceso está mediado por <strong>un control de varias cuadras de cola</strong>. Los organizadores lo padecen sin decirlo en voz alta.</p>
+      </div>
+      <div class="eco-card">
+        <div class="eco-icono">🚕</div>
+        <h3>Efecto indirecto</h3>
+        <p>La gente que decide no salir tampoco llama a un remis, no cena afuera, no compra en el kiosko. El daño se multiplica en toda la cadena de proveedores y <strong>empleos del sector</strong>.</p>
+      </div>
+    </div>
+
+    <div class="impacto-visual">
+      <h3>Una noche de sábado: con y sin control</h3>
+      <div class="noche-simulador">
+        <div class="noche-col">
+          <h4>Sin control</h4>
+          <div class="barra-noche" style="height:200px">
+            <div class="barra-fill verde" style="height:100%">100%</div>
+          </div>
+          <div class="noche-label">Nivel de actividad gastronómica estimado</div>
+        </div>
+        <div class="noche-col">
+          <h4>Con control anunciado</h4>
+          <div class="barra-noche" style="height:200px">
+            <div class="barra-fill" style="height:55%">55%</div>
+          </div>
+          <div class="noche-label">Caída aproximada del 30–45%</div>
+        </div>
+        <div class="noche-col" style="flex:2">
+          <h4>Lo que se pierde en números</h4>
+          <ul class="turismo-lista">
+            <li>Un bar mediano factura entre $300.000 y $800.000 pesos en una noche de sábado de temporada. Una caída del 40% son entre $120.000 y $320.000 menos.</li>
+            <li>En una ciudad de 100.000 habitantes con 50 establecimientos gastronómicos activos un sábado, el daño acumulado puede superar los <strong>$10 millones por operativo</strong>.</li>
+            <li>El turista que elige otro destino no es solo una noche: es una familia que no vuelve, que no recomienda, que no deja reseñas positivas.</li>
+            <li>Ningún municipio publica el número de alcoholemias positivas por control. Si lo publicaran, la relación costo-beneficio sería difícil de defender.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- SECCIÓN 3: EXPERIENCIAS -->
+<section id="experiencias">
+  <div class="container">
+    <p class="seccion-label">Sección 03 — Tu historia</p>
+    <h2 class="seccion-titulo">Contanos tu<br><span>experiencia</span></h2>
+    <p class="seccion-intro">¿Estuviste más de 30 minutos en un control mientras el tipo en contramano pasó de largo? ¿Tu negocio perdió plata esa noche? Queremos saberlo.</p>
+
+    <div class="form-testimonio">
+      <h3>Dejá tu testimonio</h3>
+      <p>Los comentarios son revisados por un moderador antes de publicarse. No publicamos datos personales sensibles.</p>
+      <div class="form-row">
+        <div>
+          <label for="nombre">Nombre o apodo</label>
+          <input type="text" id="nombre" placeholder="Juan, La Rubia del Golf, etc.">
+        </div>
+        <div>
+          <label for="ciudad">Ciudad</label>
+          <input type="text" id="ciudad" placeholder="Gualeguaychú, Rosario...">
+        </div>
+      </div>
+      <div style="margin-bottom:1rem">
+        <label for="tipo">¿Qué tipo de experiencia tenés?</label>
+        <select id="tipo">
+          <option value="conductor">Conductor demorado</option>
+          <option value="negocio">Dueño/empleado de bar o restaurante</option>
+          <option value="turista">Turista afectado</option>
+          <option value="vecino">Vecino/a de la zona</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div>
+        <label for="testimonio">Tu experiencia</label>
+        <textarea id="testimonio" placeholder="Contanos qué pasó, cuándo y dónde. Cuantos más detalles, mejor."></textarea>
+      </div>
+      <button class="btn-enviar" onclick="enviarComentario()">Enviar testimonio →</button>
+      <div class="mensaje-ok" id="mensaje-ok">
+        ✓ Tu testimonio fue recibido y está esperando revisión. Gracias por tu participación.
+      </div>
+    </div>
+
+    <p class="conteo-comentarios" id="conteo-comentarios">Cargando testimonios...</p>
+    <div class="comentarios-lista" id="comentarios-lista"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">AlcoControl.ar</div>
+      <p class="footer-desc">Un sitio ciudadano para documentar, analizar y debatir sobre los controles de alcoholemia en Argentina. No somos abogados, somos vecinos hartos.</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#datos">Los datos</a></li>
+      <li><a href="#economia">Impacto económico</a></li>
+      <li><a href="#experiencias">Compartir experiencia</a></li>
+      <li><a href="https://www.ansv.gob.ar" target="_blank">ANSV — Agencia Nacional de Seguridad Vial</a></li>
+      <li><a href="https://www.luchemos.org.ar" target="_blank">Luchemos por la Vida</a></li>
+    </ul>
+  </div>
+  <div class="footer-legal">
+    Este sitio no promueve el consumo de alcohol ni conducir bajo sus efectos. Toda la información publicada es de dominio público o está basada en estudios citados. Los testimonios son expresiones personales de sus autores.
+    <a href="#" class="admin-link" onclick="abrirAdmin();return false">⚙</a>
+  </div>
+</footer>
+
+<!-- ADMIN PANEL -->
+<div class="admin-overlay" id="admin-overlay">
+  <div class="admin-panel">
+
+    <!-- Login form -->
+    <div class="admin-login" id="admin-login">
+      <h2>Panel de moderación</h2>
+      <p>Ingresá la contraseña para acceder a los testimonios pendientes.</p>
+      <div style="text-align:left">
+        <label for="admin-pass">Contraseña</label>
+        <input type="password" id="admin-pass" placeholder="••••••••••" onkeyup="if(event.key==='Enter')loginAdmin()">
+      </div>
+      <button class="btn-login" onclick="loginAdmin()">Ingresar</button>
+      <p id="login-error" style="color:var(--rojo);font-size:.85rem;margin-top:.75rem;display:none">Contraseña incorrecta.</p>
+      <p style="margin-top:1.5rem"><a href="#" onclick="cerrarAdmin();return false" style="color:var(--texto-muted);font-size:.85rem">← Cerrar</a></p>
+    </div>
+
+    <!-- Panel content -->
+    <div id="admin-content" style="display:none">
+      <div class="admin-header">
+        <h2>Panel de moderación</h2>
+        <button class="btn-cerrar" onclick="cerrarAdmin()">✕ Cerrar</button>
+      </div>
+      <div class="admin-tabs">
+        <button class="tab-btn activo" onclick="mostrarTab('pendientes',this)">Pendientes <span id="badge-pendientes"></span></button>
+        <button class="tab-btn" onclick="mostrarTab('aprobados',this)">Aprobados <span id="badge-aprobados"></span></button>
+      </div>
+      <div class="tab-content activo" id="tab-pendientes">
+        <div id="lista-pendientes"></div>
+      </div>
+      <div class="tab-content" id="tab-aprobados">
+        <div id="lista-aprobados"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ===== DATOS: horario ===== */
+const accidentalidad = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,2,2]; // 0=bajo 1=medio 2=alto
+const controlFrecuente= [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0];
+const grid = document.getElementById('horario-grid');
+for(let h=0;h<24;h++){
+  const b = document.createElement('div');
+  b.className = 'hora-bloque';
+  const a = accidentalidad[h], c = controlFrecuente[h];
+  if(a>0 && c>0) b.classList.add('ambos');
+  else if(a>0) b.classList.add('accidente');
+  else if(c>0) b.classList.add('control');
+  b.textContent = h + 'h';
+  b.title = `${h}:00 — Accidentalidad: ${['baja','media','alta'][a]||'baja'} | Control: ${c?'frecuente':'raro'}`;
+  grid.appendChild(b);
+}
+
+/* ===== STORAGE DE COMENTARIOS ===== */
+const STORAGE_KEY = 'alcocontrol_comentarios';
+
+function getComentarios(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch(e){ return []; }
+}
+function saveComentarios(arr){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+}
+
+/* ===== COMENTARIOS PÚBLICOS ===== */
+function renderComentariosPublicos(){
+  const todos = getComentarios();
+  const aprobados = todos.filter(c=>c.estado==='aprobado').sort((a,b)=>b.id-a.id);
+  const lista = document.getElementById('comentarios-lista');
+  const conteo = document.getElementById('conteo-comentarios');
+  conteo.textContent = aprobados.length === 0 ? 'Sé el primero en dejar tu testimonio.' : `${aprobados.length} testimonio${aprobados.length!==1?'s':''} publicado${aprobados.length!==1?'s':''}`;
+  if(aprobados.length===0){
+    lista.innerHTML = '<div class="sin-comentarios">Todavía no hay testimonios aprobados. ¡El tuyo puede ser el primero!</div>';
+    return;
+  }
+  lista.innerHTML = aprobados.map(c=>`
+    <div class="comentario">
+      <div class="comentario-header">
+        <div>
+          <span class="comentario-autor">${esc(c.nombre)}</span>
+          <span class="comentario-ciudad"> — ${esc(c.ciudad)}</span>
+          <span class="comentario-ciudad" style="color:var(--texto-muted);margin-left:.5rem">(${esc(c.tipo)})</span>
+        </div>
+        <span class="comentario-fecha">${c.fecha}</span>
+      </div>
+      <p class="comentario-texto">${esc(c.texto).replace(/\n/g,'<br>')}</p>
+    </div>
+  `).join('');
+}
+
+function esc(str){
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function enviarComentario(){
+  const nombre = document.getElementById('nombre').value.trim();
+  const ciudad = document.getElementById('ciudad').value.trim();
+  const tipo = document.getElementById('tipo').value;
+  const texto = document.getElementById('testimonio').value.trim();
+  if(!nombre||!ciudad||!texto){alert('Por favor completá nombre, ciudad y testimonio.');return;}
+  if(texto.length<30){alert('El testimonio es muy corto. Contanos un poco más.');return;}
+  const comentarios = getComentarios();
+  comentarios.push({
+    id: Date.now(),
+    nombre, ciudad, tipo, texto,
+    estado: 'pendiente',
+    fecha: new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'})
+  });
+  saveComentarios(comentarios);
+  document.getElementById('nombre').value='';
+  document.getElementById('ciudad').value='';
+  document.getElementById('testimonio').value='';
+  const ok = document.getElementById('mensaje-ok');
+  ok.style.display='block';
+  setTimeout(()=>ok.style.display='none',5000);
+  renderComentariosPublicos();
+}
+
+/* ===== ADMIN ===== */
+const ADMIN_PASS = 'control123';
+let adminLogueado = false;
+
+function abrirAdmin(){
+  document.getElementById('admin-overlay').classList.add('activo');
+  if(!adminLogueado){
+    document.getElementById('admin-login').style.display='block';
+    document.getElementById('admin-content').style.display='none';
+  }
+}
+function cerrarAdmin(){
+  document.getElementById('admin-overlay').classList.remove('activo');
+}
+function loginAdmin(){
+  const pass = document.getElementById('admin-pass').value;
+  if(pass===ADMIN_PASS){
+    adminLogueado=true;
+    document.getElementById('admin-login').style.display='none';
+    document.getElementById('admin-content').style.display='block';
+    renderAdmin();
+  } else {
+    document.getElementById('login-error').style.display='block';
+  }
+}
+function mostrarTab(id, btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('activo'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('activo'));
+  document.getElementById('tab-'+id).classList.add('activo');
+  btn.classList.add('activo');
+}
+function renderAdmin(){
+  const todos = getComentarios();
+  const pendientes = todos.filter(c=>c.estado==='pendiente');
+  const aprobados = todos.filter(c=>c.estado==='aprobado');
+  document.getElementById('badge-pendientes').textContent = `(${pendientes.length})`;
+  document.getElementById('badge-aprobados').textContent = `(${aprobados.length})`;
+  const renderLista = (arr, tipo) => {
+    if(arr.length===0) return '<div class="admin-vacio">No hay comentarios en esta categoría.</div>';
+    return arr.sort((a,b)=>b.id-a.id).map(c=>`
+      <div class="admin-comentario" id="ac-${c.id}">
+        <div class="admin-meta">${esc(c.nombre)} — ${esc(c.ciudad)} — ${esc(c.tipo)} — ${c.fecha}</div>
+        <div class="admin-texto">${esc(c.texto).replace(/\n/g,'<br>')}</div>
+        <div class="admin-acciones">
+          ${tipo==='pendiente'?`<button class="btn-aprobar" onclick="accion(${c.id},'aprobado')">✓ Aprobar</button>`:''}
+          ${tipo==='pendiente'?`<button class="btn-rechazar" onclick="accion(${c.id},'rechazado')">✕ Rechazar</button>`:''}
+          ${tipo==='aprobado'?`<button class="btn-eliminar" onclick="accion(${c.id},'rechazado')">✕ Eliminar</button>`:''}
+        </div>
+      </div>
+    `).join('');
+  };
+  document.getElementById('lista-pendientes').innerHTML = renderLista(pendientes,'pendiente');
+  document.getElementById('lista-aprobados').innerHTML = renderLista(aprobados,'aprobado');
+}
+function accion(id, nuevoEstado){
+  const comentarios = getComentarios();
+  const idx = comentarios.findIndex(c=>c.id===id);
+  if(idx>=0){
+    comentarios[idx].estado = nuevoEstado;
+    saveComentarios(comentarios);
+    renderAdmin();
+    renderComentariosPublicos();
+  }
+}
+
+/* INIT */
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderComentariosPublicos();
+
+  // Cargar algunos testimonios de ejemplo si no hay ninguno
+  if(getComentarios().length === 0){
+    const ejemplos = [
+      {id:1700000001,nombre:'Rodrigo M.',ciudad:'Gualeguaychú',tipo:'conductor',texto:'Estuve 45 minutos en la fila en el puente el sábado pasado. Era noche de temporada, lleno de turistas. Todos sobrios. El control siguió hasta la medianoche pero los chicos que iban al boliche después de la 1 entraron sin problema.',estado:'aprobado',fecha:'15/03/2025'},
+      {id:1700000002,nombre:'Marcela, bar El Almacén',ciudad:'Gualeguaychú',tipo:'negocio',texto:'Nos avisaron que había control en la entrada de la ciudad ese fin de semana largo. Teníamos el salón completo reservado. Cancelaron el 60% de las mesas. No hay forma de recuperar eso. Y encima, cuántos positivos hicieron? Nadie te dice.',estado:'aprobado',fecha:'02/02/2025'},
+      {id:1700000003,nombre:'Turista cordobés',ciudad:'Córdoba (visitando)',tipo:'turista',texto:'Primera vez en la ciudad, fuimos con mi familia. En la salida el domingo a la noche, dos horas de cola. Los chicos dormidos en el auto. Cuando llegué al control, "todo bien, siga". Listo. La próxima vamos a San Martín de los Andes.',estado:'aprobado',fecha:'22/01/2025'},
+    ];
+    saveComentarios(ejemplos);
+    renderComentariosPublicos();
+  }
+});
+
+// Cerrar al click fuera del panel
+document.getElementById('admin-overlay').addEventListener('click', function(e){
+  if(e.target===this) cerrarAdmin();
+});
+</script>
+</body>
+</html>
